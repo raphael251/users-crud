@@ -18,12 +18,10 @@ func main() {
 		panic(err)
 	}
 
-	connectionString := fmt.Sprintf(
+	db, err := sql.Open(configs.DBDriver, fmt.Sprintf(
 		"%s:%s@tcp(%s:%s)/%s",
 		configs.DBUser, configs.DBPassword, configs.DBHost, configs.DBPort, configs.DBName,
-	)
-
-	db, err := sql.Open(configs.DBDriver, connectionString)
+	))
 	if err != nil {
 		panic(err)
 	}
