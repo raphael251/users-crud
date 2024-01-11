@@ -1,9 +1,9 @@
 version: '3'
 
 services:
-  mysql:
+  users-crud-db:
     image: mysql:8.0
-    container_name: mysql
+    container_name: users-crud-db
     restart: always
     platform: linux/amd64
     environment:
@@ -12,3 +12,20 @@ services:
       MYSQL_PASSWORD: root
     ports:
       - 3306:3306
+
+  users-crud-api:
+    build: .
+    container_name: users-crud-api
+    environment:
+      - APP_ENV=local_container
+      - DB_DRIVER=mysql
+      - DB_HOST=localhost
+      - DB_PORT=3306
+      - DB_NAME=awesomedatabase
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - SERVER_PORT=3000
+    ports:
+      - 3000:3000
+    depends_on:
+      - users-crud-db
