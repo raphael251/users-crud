@@ -15,5 +15,18 @@ func NewUserRepository(db *sql.DB) *UserRepository {
 }
 
 func (r *UserRepository) Save(user *user.User) error {
+	stmt, err := r.DB.Prepare("insert into users(id, name, birth_date, email, password, address) values(?, ?, ?, ?, ?, ?)")
+
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(user.ID, user.Name, user.BirthDate, user.Email, user.Password, user.Address)
+
+	if err != nil {
+		return err
+	}
+
 	return nil
 }

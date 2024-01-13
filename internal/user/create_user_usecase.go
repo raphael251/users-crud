@@ -1,0 +1,64 @@
+package user
+
+import (
+	"fmt"
+	"time"
+
+	"github.com/go-playground/validator/v10"
+)
+
+type CreateUserInputDTO struct {
+	Name      string `json:"name" validate:"required"`
+	BirthDate string `json:"birth_date" validate:"required,datetime=2006-01-02"`
+	Email     string `json:"email" validate:"required,email"`
+	Password  string `json:"password" validate:"required"`
+	Address   string `json:"address" validate:"required"`
+}
+
+func (user *CreateUserInputDTO) Validate() []error {
+	validate := validator.New()
+	err := validate.Struct(user)
+
+	if err != nil {
+		errs := make([]error, 0)
+		for _, e := range err.(validator.ValidationErrors) {
+			errs = append(errs, fmt.Errorf("invalid field: %s", e.Field()))
+		}
+		return errs
+	}
+
+	return nil
+}
+
+type CreateUserOutputDTO struct {
+	ID string `json:"id"`
+}
+
+type CreateUserUseCase struct {
+	UserRepository UserRepositoryInterface
+}
+
+func NewCreateUserUseCase(userRepository UserRepositoryInterface) *CreateUserUseCase {
+	return &CreateUserUseCase{
+		UserRepository: userRepository,
+	}
+}
+
+func (c *CreateUserUseCase) Execute(input CreateUserInputDTO) (*CreateUserOutputDTO, error) {
+
+	user, err := NewUser(
+		input.Name,
+		time.Now(), input.Email, input.Password, input.Address)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if err := c.UserRepository.Save(user); err != nil {
+		return nil, err
+	}
+
+	return &CreateUserOutputDTO{
+		ID: user.ID.String(),
+	}, nil
+}

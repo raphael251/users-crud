@@ -10,6 +10,7 @@ import (
 	"github.com/raphael251/users-crud/internal/infra/database"
 	"github.com/raphael251/users-crud/internal/infra/web/handlers"
 	"github.com/raphael251/users-crud/internal/infra/web/server"
+	"github.com/raphael251/users-crud/internal/user"
 )
 
 func main() {
@@ -29,10 +30,11 @@ func main() {
 
 	server := server.NewServer(configs.ServerPort)
 
-	userRepository := database.NewUserRepository(db)
-
 	applicationHandler := handlers.NewApplicationHandler()
-	userHandler := handlers.NewUserHandler(userRepository)
+
+	userRepository := database.NewUserRepository(db)
+	createUserUseCase := user.NewCreateUserUseCase(userRepository)
+	userHandler := handlers.NewUserHandler(userRepository, createUserUseCase)
 
 	server.AddHandler("/health", applicationHandler.Health)
 	server.AddHandler("/users", userHandler.Create)

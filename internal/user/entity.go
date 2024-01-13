@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/raphael251/users-crud/pkg/entity"
-	"github.com/raphael251/users-crud/pkg/utils"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -45,15 +44,15 @@ func NewUser(name string, birthDate time.Time, email, password, address string) 
 }
 
 func (u *User) IsValid() error {
-	validator := &utils.Validator{}
+	// validator := &utils.Validator{}
 
 	if u.Name == "" {
 		return errors.New("name should not be empty")
 	}
 
-	if !validator.IsEmail(u.Email) {
-		return errors.New("invalid e-mail")
-	}
+	// if !validator.IsEmail(u.Email) {
+	// 	return errors.New("invalid e-mail")
+	// }
 
 	return nil
 }
