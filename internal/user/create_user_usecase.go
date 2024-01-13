@@ -46,9 +46,13 @@ func NewCreateUserUseCase(userRepository UserRepositoryInterface) *CreateUserUse
 
 func (c *CreateUserUseCase) Execute(input CreateUserInputDTO) (*CreateUserOutputDTO, error) {
 
-	user, err := NewUser(
-		input.Name,
-		time.Now(), input.Email, input.Password, input.Address)
+	birthDate, err := time.Parse("2006-01-02", input.BirthDate)
+
+	if err != nil {
+		return nil, err
+	}
+
+	user, err := NewUser(input.Name, birthDate, input.Email, input.Password, input.Address)
 
 	if err != nil {
 		return nil, err
