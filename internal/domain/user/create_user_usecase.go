@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/raphael251/users-crud/internal/domain/utils"
 )
 
 type CreateUserInputDTO struct {
@@ -45,11 +46,10 @@ func NewCreateUserUseCase(userRepository UserRepositoryInterface) *CreateUserUse
 }
 
 func (c *CreateUserUseCase) Execute(input CreateUserInputDTO) (*CreateUserOutputDTO, error) {
-
 	birthDate, err := time.Parse("2006-01-02", input.BirthDate)
 
 	if err != nil {
-		return nil, err
+		return nil, &utils.UseCaseError{Type: utils.Validation, Message: "the birth date is not valid. Please see the docs."}
 	}
 
 	user, err := NewUser(input.Name, birthDate, input.Email, input.Password, input.Address)

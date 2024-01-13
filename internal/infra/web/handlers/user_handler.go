@@ -2,10 +2,12 @@ package handlers
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
-	"github.com/raphael251/users-crud/internal/user"
-	"github.com/raphael251/users-crud/pkg/utils"
+	"github.com/raphael251/users-crud/internal/domain/user"
+	"github.com/raphael251/users-crud/internal/domain/utils"
+	responsehelpers "github.com/raphael251/users-crud/internal/infra/web/response_helpers"
 )
 
 type UserHandler struct {
@@ -26,11 +28,7 @@ func (h *UserHandler) Create(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&receivedUser)
 
 	if err != nil {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusBadRequest)
-
-		errMessage := utils.Error{Message: "bad request", Data: []string{"Invalid JSON. Please see the docs."}}
-		json.NewEncoder(w).Encode(errMessage)
+		responsehelpers.BadRequest(w, r, []string{"Invalid JSON. Please see the docs."})
 		return
 	}
 
@@ -40,22 +38,25 @@ func (h *UserHandler) Create(w http.ResponseWriter, r *http.Request) {
 			errs = append(errs, err.Error())
 		}
 
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusBadRequest)
-
-		errMessage := utils.Error{Message: "bad request", Data: errs}
-		json.NewEncoder(w).Encode(errMessage)
+		responsehelpers.BadRequest(w, r, errs)
 		return
 	}
 
 	result, err := h.CreateUserUseCase.Execute(receivedUser)
 
 	if err != nil {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusInternalServerError)
+		if cerr, ok := err.(*utils.UseCaseError); ok {
+			if cerr.Type == utils.Validation {
+				responsehelpers.BadRequest(w, r, []string{cerr.Error()})
+			}
 
-		errMessage := utils.Error{Message: "internal server error"}
-		json.NewEncoder(w).Encode(errMessage)
+			if cerr.Type == utils.BusinessRuleViolation {
+				responsehelpers.BadRequest(w, r, []string{cerr.Error()})
+			}
+		}
+
+		log.Println(err.Error())
+		responsehelpers.InternalServerError(w, r)
 		return
 	}
 

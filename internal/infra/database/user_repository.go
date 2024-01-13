@@ -3,7 +3,7 @@ package database
 import (
 	"database/sql"
 
-	"github.com/raphael251/users-crud/internal/user"
+	"github.com/raphael251/users-crud/internal/domain/user"
 )
 
 type UserRepository struct {

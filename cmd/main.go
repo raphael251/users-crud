@@ -7,10 +7,10 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 
 	"github.com/raphael251/users-crud/configs"
+	"github.com/raphael251/users-crud/internal/domain/user"
 	"github.com/raphael251/users-crud/internal/infra/database"
 	"github.com/raphael251/users-crud/internal/infra/web/handlers"
 	"github.com/raphael251/users-crud/internal/infra/web/server"
-	"github.com/raphael251/users-crud/internal/user"
 )
 
 func main() {
