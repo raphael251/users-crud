@@ -3,9 +3,9 @@ package utils
 type ErrorType int16
 
 const (
-	Validation ErrorType = iota
+	ValidationError ErrorType = iota
 	InternalError
-	BusinessRuleViolation
+	BusinessRuleViolationError
 )
 
 type UseCaseError struct {

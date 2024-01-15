@@ -1,4 +1,4 @@
-package responsehelpers
+package httputils
 
 import (
 	"encoding/json"
@@ -7,7 +7,7 @@ import (
 	"github.com/raphael251/users-crud/pkg/utils"
 )
 
-func BadRequest(w http.ResponseWriter, r *http.Request, data interface{}) {
+func RespondBadRequest(w http.ResponseWriter, r *http.Request, data interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusBadRequest)
 
@@ -15,7 +15,7 @@ func BadRequest(w http.ResponseWriter, r *http.Request, data interface{}) {
 	json.NewEncoder(w).Encode(errMessage)
 }
 
-func InternalServerError(w http.ResponseWriter, r *http.Request) {
+func RespondInternalServerError(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusInternalServerError)
 

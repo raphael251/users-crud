@@ -7,7 +7,7 @@ import (
 
 	"github.com/raphael251/users-crud/internal/domain/user"
 	"github.com/raphael251/users-crud/internal/domain/utils"
-	responsehelpers "github.com/raphael251/users-crud/internal/infra/web/response_helpers"
+	"github.com/raphael251/users-crud/internal/infra/web/httputils"
 )
 
 type UserHandler struct {
@@ -28,7 +28,7 @@ func (h *UserHandler) Create(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&receivedUser)
 
 	if err != nil {
-		responsehelpers.BadRequest(w, r, []string{"Invalid JSON. Please see the docs."})
+		httputils.RespondBadRequest(w, r, []string{"Invalid JSON. Please see the docs."})
 		return
 	}
 
@@ -38,7 +38,7 @@ func (h *UserHandler) Create(w http.ResponseWriter, r *http.Request) {
 			errs = append(errs, err.Error())
 		}
 
-		responsehelpers.BadRequest(w, r, errs)
+		httputils.RespondBadRequest(w, r, errs)
 		return
 	}
 
@@ -46,17 +46,19 @@ func (h *UserHandler) Create(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		if cerr, ok := err.(*utils.UseCaseError); ok {
-			if cerr.Type == utils.Validation {
-				responsehelpers.BadRequest(w, r, []string{cerr.Error()})
+			if cerr.Type == utils.ValidationError {
+				httputils.RespondBadRequest(w, r, []string{cerr.Error()})
+				return
 			}
 
-			if cerr.Type == utils.BusinessRuleViolation {
-				responsehelpers.BadRequest(w, r, []string{cerr.Error()})
+			if cerr.Type == utils.BusinessRuleViolationError {
+				httputils.RespondBadRequest(w, r, []string{cerr.Error()})
+				return
 			}
 		}
 
 		log.Println(err.Error())
-		responsehelpers.InternalServerError(w, r)
+		httputils.RespondInternalServerError(w, r)
 		return
 	}
 

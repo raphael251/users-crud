@@ -49,7 +49,7 @@ func (c *CreateUserUseCase) Execute(input CreateUserInputDTO) (*CreateUserOutput
 	birthDate, err := time.Parse("2006-01-02", input.BirthDate)
 
 	if err != nil {
-		return nil, &utils.UseCaseError{Type: utils.Validation, Message: "the birth date is not valid. Please see the docs."}
+		return nil, &utils.UseCaseError{Type: utils.ValidationError, Message: "the birth date is not valid. Please see the docs."}
 	}
 
 	user, err := NewUser(input.Name, birthDate, input.Email, input.Password, input.Address)
