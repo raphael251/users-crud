@@ -1,7 +1,6 @@
 package user
 
 import (
-	"errors"
 	"time"
 
 	"github.com/raphael251/users-crud/pkg/entity"
@@ -26,12 +25,6 @@ func NewUser(name string, birthDate time.Time, email, password, address string) 
 		Address:   address,
 	}
 
-	err := user.IsValid()
-
-	if err != nil {
-		return nil, err
-	}
-
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 
 	if err != nil {
@@ -41,18 +34,4 @@ func NewUser(name string, birthDate time.Time, email, password, address string) 
 	user.Password = string(hashedPassword)
 
 	return user, nil
-}
-
-func (u *User) IsValid() error {
-	// validator := &utils.Validator{}
-
-	if u.Name == "" {
-		return errors.New("name should not be empty")
-	}
-
-	// if !validator.IsEmail(u.Email) {
-	// 	return errors.New("invalid e-mail")
-	// }
-
-	return nil
 }
