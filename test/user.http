@@ -1,10 +1,10 @@
 # Create user / Sign up
-POST http://localhost:3000/users HTTP/1.1
+POST http://localhost:3000/api/v1/users HTTP/1.1
 Content-Type: application/json
 
 {
   "name": "John doe",
-  "birth_date": "1997/03/23",
+  "birth_date": "1997-03-23",
   "email": "john.doe@email.com",
   "password": "123456",
   "address": "Avenida Brasil, 34 - São Paulo - SP"
@@ -13,7 +13,7 @@ Content-Type: application/json
 ###
 # Login
 
-POST http://localhost:3000/users/login HTTP/1.1
+POST http://localhost:3000/api/v1/users/login HTTP/1.1
 Content-Type: application/json
 
 {
@@ -24,19 +24,18 @@ Content-Type: application/json
 ###
 # Get user information
 
-GET http://localhost:3000/users/{id} HTTP/1.1
+GET http://localhost:3000/api/v1/users/{id} HTTP/1.1
 Content-Type: application/json
 
 ###
 # Update user data
 
-PUT http://localhost:3000/users/{id} HTTP/1.1
+PUT http://localhost:3000/api/v1/users/4f1c78b0-5f0c-454d-a2a9-608b0ba86598 HTTP/1.1
 Content-Type: application/json
 
 {
   "name": "John doe",
-  "birth_date": "1997/03/23",
-  "email": "john.doe@email.com",
+  "birth_date": "1997-03-23",
   "password": "123456",
   "address": "Avenida Brasil, 34 - São Paulo - SP"
 }
