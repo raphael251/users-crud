@@ -33,10 +33,10 @@ func RespondNotFound(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNotFound)
 }
 
-func RespondCreated(w http.ResponseWriter, r *http.Request, data interface{}) {
+func RespondCreated(w http.ResponseWriter, r *http.Request, contentLocation string) {
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Content-Location", contentLocation)
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(data)
 }
 
 func RespondOK(w http.ResponseWriter, r *http.Request, data interface{}) {

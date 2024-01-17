@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -72,7 +73,8 @@ func (h *UserHandler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	httputils.RespondCreated(w, r, result)
+	contentLocation := fmt.Sprintf("/%s", result.ID)
+	httputils.RespondCreated(w, r, contentLocation)
 }
 
 func (h *UserHandler) Update(w http.ResponseWriter, r *http.Request) {
