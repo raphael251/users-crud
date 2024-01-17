@@ -35,3 +35,23 @@ func NewUser(name string, birthDate time.Time, email, password, address string) 
 
 	return user, nil
 }
+
+func BuildUser(id entity.ID, name string, birthDate time.Time, email, password, address string) (*User, error) {
+	user := &User{
+		ID:        id,
+		Name:      name,
+		BirthDate: birthDate,
+		Email:     email,
+		Address:   address,
+	}
+
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+
+	if err != nil {
+		return nil, err
+	}
+
+	user.Password = string(hashedPassword)
+
+	return user, nil
+}
