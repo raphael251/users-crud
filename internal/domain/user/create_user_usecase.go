@@ -58,7 +58,7 @@ func (c *CreateUserUseCase) Execute(input CreateUserInputDTO) (*CreateUserOutput
 		return nil, err
 	}
 
-	if err := c.UserRepository.Save(user); err != nil {
+	if err := c.UserRepository.Create(user); err != nil {
 		return nil, err
 	}
 
