@@ -18,7 +18,7 @@ func main() {
 	}
 
 	db, err := sql.Open(configs.DBDriver, fmt.Sprintf(
-		"%s:%s@tcp(%s:%s)/%s",
+		"%s:%s@tcp(%s:%s)/%s?parseTime=true",
 		configs.DBUser, configs.DBPassword, configs.DBHost, configs.DBPort, configs.DBName,
 	))
 	if err != nil {
