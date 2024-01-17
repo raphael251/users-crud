@@ -28,8 +28,8 @@ func main() {
 
 	server := server.NewServer(configs.ServerPort)
 
-	server.AddRouter("/health", routers.GenerateApplicationRouter())
-	server.AddRouter("/users", routers.GenerateUserRouter(db))
+	server.AddRouter("/api/v1/health", routers.GenerateApplicationRouter())
+	server.AddRouter("/api/v1/users", routers.GenerateUserRouter(db))
 
 	server.Start()
 }
