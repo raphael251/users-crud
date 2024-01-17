@@ -41,7 +41,7 @@ func (r *UserRepository) FindById(id entity.ID) (*user.User, error) {
 			"SELECT id, name, birth_date, email, password, address FROM users where id = ?",
 			id,
 		).
-		Scan(&user.ID, &user.Name, &user.BirthDate, &user.Email, &user.Password, &user.Password)
+		Scan(&user.ID, &user.Name, &user.BirthDate, &user.Email, &user.Password, &user.Address)
 
 	if err != nil {
 		return nil, err
@@ -52,7 +52,7 @@ func (r *UserRepository) FindById(id entity.ID) (*user.User, error) {
 
 func (r *UserRepository) Update(user *user.User) error {
 	_, err := r.DB.Exec(
-		"UPDATE USERS SET name = ?, birth_date = ?, password = ?, address = ? WHERE id = ?",
+		"UPDATE users SET name = ?, birth_date = ?, password = ?, address = ? WHERE id = ?",
 		user.Name,
 		user.BirthDate,
 		user.Password,

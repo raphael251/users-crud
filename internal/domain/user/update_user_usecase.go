@@ -13,7 +13,7 @@ type UpdateUserInputDTO struct {
 	ID        string `json:"id"`
 	Name      string `json:"name"`
 	BirthDate string `json:"birth_date" validate:"datetime=2006-01-02"`
-	Email     string `json:"email" validate:"email"`
+	Email     string `json:"email"`
 	Password  string `json:"password"`
 	Address   string `json:"address"`
 }
@@ -75,7 +75,7 @@ func (c *UpdateUserUseCase) Execute(input UpdateUserInputDTO) error {
 	builtUser, err := BuildUser(id, input.Name, birthDate, foundUser.Email, input.Password, input.Address)
 
 	if err != nil {
-		return &utils.UseCaseError{Type: utils.InternalError, Message: "could retrieve and build existing user"}
+		return &utils.UseCaseError{Type: utils.InternalError, Message: "could not retrieve and build existing user"}
 	}
 
 	err = c.UserRepository.Update(builtUser)
