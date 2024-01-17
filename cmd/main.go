@@ -7,9 +7,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 
 	"github.com/raphael251/users-crud/configs"
-	"github.com/raphael251/users-crud/internal/domain/user"
-	"github.com/raphael251/users-crud/internal/infra/database"
-	"github.com/raphael251/users-crud/internal/infra/web/handlers"
+	"github.com/raphael251/users-crud/internal/infra/web/routers"
 	"github.com/raphael251/users-crud/internal/infra/web/server"
 )
 
@@ -30,14 +28,8 @@ func main() {
 
 	server := server.NewServer(configs.ServerPort)
 
-	applicationHandler := handlers.NewApplicationHandler()
-
-	userRepository := database.NewUserRepository(db)
-	createUserUseCase := user.NewCreateUserUseCase(userRepository)
-	userHandler := handlers.NewUserHandler(userRepository, createUserUseCase)
-
-	server.AddHandler("/health", applicationHandler.Health)
-	server.AddHandler("/users", userHandler.Create)
+	server.AddRouter("/health", routers.GenerateApplicationRouter())
+	server.AddRouter("/users", routers.GenerateUserRouter(db))
 
 	server.Start()
 }

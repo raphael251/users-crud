@@ -11,20 +11,22 @@ import (
 
 type Server struct {
 	Router     chi.Router
-	Handlers   map[string]http.HandlerFunc
+	Routers    map[string]RouterFunc
 	ServerPort string
 }
+
+type RouterFunc func(r chi.Router)
 
 func NewServer(serverPort string) *Server {
 	return &Server{
 		Router:     chi.NewRouter(),
-		Handlers:   make(map[string]http.HandlerFunc),
+		Routers:    make(map[string]RouterFunc),
 		ServerPort: serverPort,
 	}
 }
 
-func (s *Server) AddHandler(path string, handler http.HandlerFunc) {
-	s.Handlers[path] = handler
+func (s *Server) AddRouter(path string, routerFunc RouterFunc) {
+	s.Routers[path] = routerFunc
 }
 
 func (s *Server) registerMiddlewares() {
@@ -32,15 +34,15 @@ func (s *Server) registerMiddlewares() {
 	s.Router.Use(middleware.Recoverer)
 }
 
-func (s *Server) registerHandlers() {
-	for path, handler := range s.Handlers {
-		s.Router.Handle(path, handler)
+func (s *Server) registerRouters() {
+	for path, router := range s.Routers {
+		s.Router.Route(path, router)
 	}
 }
 
 func (s *Server) Start() {
 	s.registerMiddlewares()
-	s.registerHandlers()
+	s.registerRouters()
 
 	log.Printf("Server listening on port %s", s.ServerPort)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", s.ServerPort), s.Router))
