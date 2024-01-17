@@ -3,8 +3,8 @@ package database
 import (
 	"database/sql"
 
-	"github.com/raphael251/users-crud/internal/domain/user"
-	"github.com/raphael251/users-crud/pkg/entity"
+	"github.com/raphael251/users-crud/internal/domain/entity"
+	pkgEntity "github.com/raphael251/users-crud/pkg/entity"
 )
 
 type UserRepository struct {
@@ -15,7 +15,7 @@ func NewUserRepository(db *sql.DB) *UserRepository {
 	return &UserRepository{DB: db}
 }
 
-func (r *UserRepository) Create(user *user.User) error {
+func (r *UserRepository) Create(user *entity.User) error {
 	_, err := r.DB.Exec(
 		"insert into users(id, name, birth_date, email, password, address) values(?, ?, ?, ?, ?, ?)",
 		user.ID, user.Name, user.BirthDate, user.Email, user.Password, user.Address,
@@ -28,8 +28,8 @@ func (r *UserRepository) Create(user *user.User) error {
 	return nil
 }
 
-func (r *UserRepository) FindById(id entity.ID) (*user.User, error) {
-	var user user.User
+func (r *UserRepository) FindById(id pkgEntity.ID) (*entity.User, error) {
+	var user entity.User
 
 	err := r.DB.
 		QueryRow(
@@ -45,7 +45,7 @@ func (r *UserRepository) FindById(id entity.ID) (*user.User, error) {
 	return &user, nil
 }
 
-func (r *UserRepository) Update(user *user.User) error {
+func (r *UserRepository) Update(user *entity.User) error {
 	_, err := r.DB.Exec(
 		"UPDATE users SET name = ?, birth_date = ?, password = ?, address = ? WHERE id = ?",
 		user.Name,

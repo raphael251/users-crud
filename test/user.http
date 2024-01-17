@@ -24,7 +24,7 @@ Content-Type: application/json
 ###
 # Get user information
 
-GET http://localhost:3000/api/v1/users/{id} HTTP/1.1
+GET http://localhost:3000/api/v1/users/4f1c78b0-5f0c-454d-a2a9-608b0ba86598 HTTP/1.1
 Content-Type: application/json
 
 ###

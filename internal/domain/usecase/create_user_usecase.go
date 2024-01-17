@@ -1,10 +1,12 @@
-package user
+package usecase
 
 import (
 	"fmt"
 	"time"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/raphael251/users-crud/internal/domain/entity"
+	"github.com/raphael251/users-crud/internal/domain/interfaces"
 	"github.com/raphael251/users-crud/internal/domain/utils"
 )
 
@@ -36,10 +38,10 @@ type CreateUserOutputDTO struct {
 }
 
 type CreateUserUseCase struct {
-	UserRepository UserRepositoryInterface
+	UserRepository interfaces.UserRepositoryInterface
 }
 
-func NewCreateUserUseCase(userRepository UserRepositoryInterface) *CreateUserUseCase {
+func NewCreateUserUseCase(userRepository interfaces.UserRepositoryInterface) *CreateUserUseCase {
 	return &CreateUserUseCase{
 		UserRepository: userRepository,
 	}
@@ -52,7 +54,7 @@ func (c *CreateUserUseCase) Execute(input CreateUserInputDTO) (*CreateUserOutput
 		return nil, &utils.UseCaseError{Type: utils.ValidationError, Message: "the birth date is not valid. Please see the docs."}
 	}
 
-	user, err := NewUser(input.Name, birthDate, input.Email, input.Password, input.Address)
+	user, err := entity.NewUser(input.Name, birthDate, input.Email, input.Password, input.Address)
 
 	if err != nil {
 		return nil, err

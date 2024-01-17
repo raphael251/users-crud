@@ -1,6 +1,7 @@
-package user
+package usecase
 
 import (
+	"github.com/raphael251/users-crud/internal/domain/interfaces"
 	"github.com/raphael251/users-crud/internal/domain/utils"
 	"github.com/raphael251/users-crud/pkg/entity"
 )
@@ -13,10 +14,10 @@ type FindOneUserUseCaseOutputDTO struct {
 }
 
 type FindOneUserUseCase struct {
-	UserRepository UserRepositoryInterface
+	UserRepository interfaces.UserRepositoryInterface
 }
 
-func NewFindOneUserUseCase(userRepository UserRepositoryInterface) *FindOneUserUseCase {
+func NewFindOneUserUseCase(userRepository interfaces.UserRepositoryInterface) *FindOneUserUseCase {
 	return &FindOneUserUseCase{
 		UserRepository: userRepository,
 	}

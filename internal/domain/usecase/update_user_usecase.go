@@ -1,12 +1,14 @@
-package user
+package usecase
 
 import (
 	"fmt"
 	"time"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/raphael251/users-crud/internal/domain/entity"
+	"github.com/raphael251/users-crud/internal/domain/interfaces"
 	"github.com/raphael251/users-crud/internal/domain/utils"
-	"github.com/raphael251/users-crud/pkg/entity"
+	pkgEntity "github.com/raphael251/users-crud/pkg/entity"
 )
 
 type UpdateUserInputDTO struct {
@@ -35,10 +37,10 @@ func (user *UpdateUserInputDTO) Validate() []error {
 }
 
 type UpdateUserUseCase struct {
-	UserRepository UserRepositoryInterface
+	UserRepository interfaces.UserRepositoryInterface
 }
 
-func NewUpdateUserUseCase(userRepository UserRepositoryInterface) *UpdateUserUseCase {
+func NewUpdateUserUseCase(userRepository interfaces.UserRepositoryInterface) *UpdateUserUseCase {
 	return &UpdateUserUseCase{
 		UserRepository: userRepository,
 	}
@@ -60,7 +62,7 @@ func (c *UpdateUserUseCase) Execute(input UpdateUserInputDTO) error {
 		}
 	}
 
-	id, err := entity.ParseID(input.ID)
+	id, err := pkgEntity.ParseID(input.ID)
 
 	if err != nil {
 		return &utils.UseCaseError{Type: utils.ValidationError, Message: "invalid user id"}
@@ -72,7 +74,7 @@ func (c *UpdateUserUseCase) Execute(input UpdateUserInputDTO) error {
 		return &utils.UseCaseError{Type: utils.BusinessRuleViolationError, Message: "invalid user id"}
 	}
 
-	builtUser, err := BuildUser(id, input.Name, birthDate, foundUser.Email, input.Password, input.Address)
+	builtUser, err := entity.BuildUser(id, input.Name, birthDate, foundUser.Email, input.Password, input.Address)
 
 	if err != nil {
 		return &utils.UseCaseError{Type: utils.InternalError, Message: "could not retrieve and build existing user"}

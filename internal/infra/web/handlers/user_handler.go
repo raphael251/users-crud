@@ -7,23 +7,24 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/raphael251/users-crud/internal/domain/user"
+	"github.com/raphael251/users-crud/internal/domain/interfaces"
+	"github.com/raphael251/users-crud/internal/domain/usecase"
 	"github.com/raphael251/users-crud/internal/domain/utils"
 	"github.com/raphael251/users-crud/internal/infra/web/httputils"
 )
 
 type UserHandler struct {
-	UserRepository     user.UserRepositoryInterface
-	CreateUserUseCase  user.CreateUserUseCase
-	UpdateUserUseCase  user.UpdateUserUseCase
-	FindOneUserUseCase user.FindOneUserUseCase
+	UserRepository     interfaces.UserRepositoryInterface
+	CreateUserUseCase  usecase.CreateUserUseCase
+	UpdateUserUseCase  usecase.UpdateUserUseCase
+	FindOneUserUseCase usecase.FindOneUserUseCase
 }
 
 func NewUserHandler(
-	userRepository user.UserRepositoryInterface,
-	createUserUseCase *user.CreateUserUseCase,
-	updateUserUseCase *user.UpdateUserUseCase,
-	findOneUserUseCase *user.FindOneUserUseCase,
+	userRepository interfaces.UserRepositoryInterface,
+	createUserUseCase *usecase.CreateUserUseCase,
+	updateUserUseCase *usecase.UpdateUserUseCase,
+	findOneUserUseCase *usecase.FindOneUserUseCase,
 ) *UserHandler {
 	return &UserHandler{
 		UserRepository:     userRepository,
@@ -34,7 +35,7 @@ func NewUserHandler(
 }
 
 func (h *UserHandler) Create(w http.ResponseWriter, r *http.Request) {
-	var receivedUser user.CreateUserInputDTO
+	var receivedUser usecase.CreateUserInputDTO
 
 	err := json.NewDecoder(r.Body).Decode(&receivedUser)
 
@@ -73,12 +74,12 @@ func (h *UserHandler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	contentLocation := fmt.Sprintf("/%s", result.ID)
+	contentLocation := fmt.Sprintf("/api/v1/users/%s", result.ID)
 	httputils.RespondCreated(w, r, contentLocation)
 }
 
 func (h *UserHandler) Update(w http.ResponseWriter, r *http.Request) {
-	var receivedUser user.UpdateUserInputDTO
+	var receivedUser usecase.UpdateUserInputDTO
 
 	err := json.NewDecoder(r.Body).Decode(&receivedUser)
 
