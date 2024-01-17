@@ -22,3 +22,14 @@ func RespondInternalServerError(w http.ResponseWriter, r *http.Request) {
 	errMessage := utils.Error{Message: "internal server error"}
 	json.NewEncoder(w).Encode(errMessage)
 }
+
+func RespondNoContent(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusNoContent)
+}
+
+func RespondCreated(w http.ResponseWriter, r *http.Request, data interface{}) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(data)
+}
