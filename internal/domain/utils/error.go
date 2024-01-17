@@ -6,6 +6,7 @@ const (
 	ValidationError ErrorType = iota
 	InternalError
 	BusinessRuleViolationError
+	NotFoundError
 )
 
 type UseCaseError struct {

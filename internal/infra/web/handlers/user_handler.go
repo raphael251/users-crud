@@ -12,20 +12,23 @@ import (
 )
 
 type UserHandler struct {
-	UserRepository    user.UserRepositoryInterface
-	CreateUserUseCase user.CreateUserUseCase
-	UpdateUserUseCase user.UpdateUserUseCase
+	UserRepository     user.UserRepositoryInterface
+	CreateUserUseCase  user.CreateUserUseCase
+	UpdateUserUseCase  user.UpdateUserUseCase
+	FindOneUserUseCase user.FindOneUserUseCase
 }
 
 func NewUserHandler(
 	userRepository user.UserRepositoryInterface,
 	createUserUseCase *user.CreateUserUseCase,
 	updateUserUseCase *user.UpdateUserUseCase,
+	findOneUserUseCase *user.FindOneUserUseCase,
 ) *UserHandler {
 	return &UserHandler{
-		UserRepository:    userRepository,
-		CreateUserUseCase: *createUserUseCase,
-		UpdateUserUseCase: *updateUserUseCase,
+		UserRepository:     userRepository,
+		CreateUserUseCase:  *createUserUseCase,
+		UpdateUserUseCase:  *updateUserUseCase,
+		FindOneUserUseCase: *findOneUserUseCase,
 	}
 }
 
@@ -115,4 +118,30 @@ func (h *UserHandler) Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	httputils.RespondNoContent(w, r)
+}
+
+func (h *UserHandler) FindOne(w http.ResponseWriter, r *http.Request) {
+	receivedUserId := chi.URLParam(r, "id")
+
+	user, err := h.FindOneUserUseCase.Execute(receivedUserId)
+
+	if err != nil {
+		if cerr, ok := err.(*utils.UseCaseError); ok {
+			if cerr.Type == utils.ValidationError {
+				httputils.RespondBadRequest(w, r, []string{cerr.Error()})
+				return
+			}
+
+			if cerr.Type == utils.NotFoundError {
+				httputils.RespondNotFound(w, r)
+				return
+			}
+		}
+
+		log.Println(err.Error())
+		httputils.RespondInternalServerError(w, r)
+		return
+	}
+
+	httputils.RespondOK(w, r, user)
 }
