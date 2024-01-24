@@ -14,11 +14,10 @@ func GenerateUserRouter(db *sql.DB) func(r chi.Router) {
 	createUserUseCase := usecase.NewCreateUserUseCase(userRepository)
 	updateUserUseCase := usecase.NewUpdateUserUseCase(userRepository)
 	findOneUserUseCase := usecase.NewFindOneUserUseCase(userRepository)
-	userHandler := handlers.NewUserHandler(userRepository, createUserUseCase, updateUserUseCase, findOneUserUseCase)
 
 	return func(r chi.Router) {
-		r.Post("/", userHandler.Create)
-		r.Get("/{id}", userHandler.FindOne)
-		r.Put("/{id}", userHandler.Update)
+		r.Post("/", handlers.CreateUserHandler(createUserUseCase))
+		r.Get("/{id}", handlers.FindOneUserHandler(findOneUserUseCase))
+		r.Put("/{id}", handlers.UpdateUserHandler(updateUserUseCase))
 	}
 }
