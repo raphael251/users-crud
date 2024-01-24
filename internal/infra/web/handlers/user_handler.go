@@ -7,12 +7,15 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/raphael251/users-crud/internal/domain/interfaces"
 	"github.com/raphael251/users-crud/internal/domain/usecase"
 	"github.com/raphael251/users-crud/internal/domain/utils"
 	"github.com/raphael251/users-crud/internal/infra/web/httputils"
 )
 
-func CreateUserHandler(useCase *usecase.CreateUserUseCase) func(w http.ResponseWriter, r *http.Request) {
+func CreateUserHandler(repo interfaces.UserRepositoryInterface) func(w http.ResponseWriter, r *http.Request) {
+	useCase := usecase.NewCreateUserUseCase(repo)
+
 	return func(w http.ResponseWriter, r *http.Request) {
 		var receivedUser usecase.CreateUserInputDTO
 
@@ -58,7 +61,9 @@ func CreateUserHandler(useCase *usecase.CreateUserUseCase) func(w http.ResponseW
 	}
 }
 
-func UpdateUserHandler(useCase *usecase.UpdateUserUseCase) func(w http.ResponseWriter, r *http.Request) {
+func UpdateUserHandler(repo interfaces.UserRepositoryInterface) func(w http.ResponseWriter, r *http.Request) {
+	useCase := usecase.NewUpdateUserUseCase(repo)
+
 	return func(w http.ResponseWriter, r *http.Request) {
 		var receivedUser usecase.UpdateUserInputDTO
 
@@ -105,7 +110,9 @@ func UpdateUserHandler(useCase *usecase.UpdateUserUseCase) func(w http.ResponseW
 	}
 }
 
-func FindOneUserHandler(useCase *usecase.FindOneUserUseCase) func(w http.ResponseWriter, r *http.Request) {
+func FindOneUserHandler(repo interfaces.UserRepositoryInterface) func(w http.ResponseWriter, r *http.Request) {
+	useCase := usecase.NewFindOneUserUseCase(repo)
+
 	return func(w http.ResponseWriter, r *http.Request) {
 		receivedUserId := chi.URLParam(r, "id")
 
