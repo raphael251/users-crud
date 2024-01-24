@@ -17,7 +17,7 @@ func NewUserRepository(db *sql.DB) *UserRepository {
 
 func (r *UserRepository) Create(user *entity.User) error {
 	_, err := r.DB.Exec(
-		"insert into users(id, name, birth_date, email, password, address) values(?, ?, ?, ?, ?, ?)",
+		"INSERT INTO users(id, name, birth_date, email, password, address) VALUES(?, ?, ?, ?, ?, ?)",
 		user.ID, user.Name, user.BirthDate, user.Email, user.Password, user.Address,
 	)
 
@@ -33,7 +33,7 @@ func (r *UserRepository) FindById(id pkgEntity.ID) (*entity.User, error) {
 
 	err := r.DB.
 		QueryRow(
-			"SELECT id, name, birth_date, email, password, address FROM users where id = ?",
+			"SELECT id, name, birth_date, email, password, address FROM users WHERE id = ?",
 			id,
 		).
 		Scan(&user.ID, &user.Name, &user.BirthDate, &user.Email, &user.Password, &user.Address)
