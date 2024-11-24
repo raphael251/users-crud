@@ -1,5 +1,3 @@
-version: '3'
-
 services:
   users-crud-db:
     image: mysql:8.0
